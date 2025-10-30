@@ -3,10 +3,11 @@
 //const greet = helloWorld();
 //console.log(greet);
 
+// index.ts
 import { ISystemInformation } from './sys-info';
-import express from 'express';
+import express, { Request, Response } from 'express';
 
-const app = express();
+export const app = express();
 const port = 8000;
 
 export async function getSystemInformation(): Promise<ISystemInformation> {
@@ -33,19 +34,27 @@ export async function getSystemInformation(): Promise<ISystemInformation> {
   };
 }
 
-app.get('/api/v1/sysinfo', async (req, res) => {
+// Export route handlers for testing
+export async function sysinfoHandler(req: Request, res: Response) {
   try {
     const sysInfo = await getSystemInformation();
     res.json(sysInfo);
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve system information' });
   }
-});
+}
 
-app.use((req, res) => {
+export function notFoundHandler(req: Request, res: Response) {
   res.status(404).send('Not Found');
-});
+}
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+// Set up routes
+app.get('/api/v1/sysinfo', sysinfoHandler);
+app.use(notFoundHandler);
+
+// Start server only if run directly
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+  });
+}
