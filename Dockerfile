@@ -1,6 +1,7 @@
+
 ### BUILD ###
 # image de départ
-FROM alpine:3.20
+FROM alpine:3.20 AS builder
 # chemin de travail
 WORKDIR ./app
 # installation des paquets système
@@ -24,8 +25,10 @@ USER node
 
 
 ###RUN ###
+FROM alpine:3.20 AS runner
 
 # exposition du port
 EXPOSE 8000
 # exécution
 CMD ["node", "dist/index.js"]
+COPY --from=builder --chown=node:node /app ./app
