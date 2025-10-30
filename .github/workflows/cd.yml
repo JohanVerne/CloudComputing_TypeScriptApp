@@ -1,0 +1,75 @@
+name: CD - Build and Push Docker Image
+
+# Déclenche le workflow après la réussite du workflow CI
+on:
+  workflow_run:
+    workflows: ['CI - Build and Test']
+    types:
+      - completed
+    branches:
+      - main
+  # Permet également un déclenchement manuel
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    # Ne s'exécute que si le workflow CI a réussi
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+
+    # Permissions nécessaires pour pousser vers GHCR
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # 1. Cloner le dépôt
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configurer Docker Buildx (pour builds multi-plateforme)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. Se connecter à Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 4. Se connecter à GitHub Container Registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 5. Extraire les métadonnées (tags, labels)
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            johanve/sysinfo-api
+            ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix={{branch}}-
+
+      # 6. Construire et pousser l'image vers Docker Hub et GHCR
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 7. Afficher l'empreinte de l'image
+      - name: Image digest
+        run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"
