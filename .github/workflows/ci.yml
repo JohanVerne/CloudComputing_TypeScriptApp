@@ -1,0 +1,39 @@
+name: CI - Build and Test
+
+# Déclencher le workflow lors d'un push sur la branche main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    # Utiliser la dernière version d'Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Cloner le dépôt
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Installer Node.js dans la version utilisée en développement (v20)
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm' # Cache les dépendances npm pour accélérer les builds
+
+      # 3. Installer les dépendances de l'application
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Compiler l'application TypeScript
+      - name: Build the application
+        run: npm run build
+
+      # 5. Exécuter la suite de tests unitaires
+      - name: Run tests
+        run: npm test
