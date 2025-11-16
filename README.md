@@ -1,49 +1,17 @@
-# I Want Typescript
+# CloudComputing TypeScript App
 
-📜 Template repository for a new Node.js TypeScript project linted using ESLint with Prettier
+Simple full implementation of a cloud app for a Cloud Computing course
 
-## Usage
+# Main steps
 
-Install development dependencies:
+- Created from the [i-want-typescript template](https://github.com/khannurien/i-want-typescript)
+- Docker container created and available [here](https://hub.docker.com/repository/docker/johanve/sysinfo
+  -api/)
+- GitHub CI/CD workflow implemented in this repo
+- Web App deployed on Microsoft Azure and accessible [here](https://cloudcomputingwebapp-fac7a2fvapbxhsfx.switzerlandnorth-01.azureweb
+  sites.net/api/v1/sysinfo)
 
-```
-npm install
-```
+## Docs (in French)
 
-Lint, then format `src/*.ts` by making in-place fixes:
-
-```
-npm run lint && npm run format
-# or:
-npm run fix
-```
-
-Run unit test suites:
-
-```
-npm run test
-```
-
-View coverage of unit tests:
-
-```
-npm run test:coverage
-```
-
-Build `src/*.ts` files into `dist/*.js` files:
-
-```
-npm run build
-```
-
-Serve `dist/index.js` using `node` (for production):
-
-```
-npm run start
-```
-
-Monitor file changes and serve `src/index.ts` using `nodemon` with `ts-node` (for development):
-
-```
-npm run watch
-```
+Documentation of the whole project [here](docs/Programmer%20le%20Cloud.pdf)
+Documentation of the steps done to achieve the functioning webapp [here](docs/Rapport%20TD/RapportParSeanceJohanVERNE.pdf)
