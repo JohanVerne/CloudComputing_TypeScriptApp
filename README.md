@@ -13,5 +13,5 @@ Simple full implementation of a cloud app for a Cloud Computing course
 
 ## Docs (in French)
 
-Documentation of the whole project [here](docs/Programmer%20le%20Cloud.pdf)
-Documentation of the steps done to achieve the functioning webapp [here](docs/Rapport%20TD/RapportParSeanceJohanVERNE.pdf)
+- Documentation of the whole project [here](docs/Programmer%20le%20Cloud.pdf)
+- Documentation of the steps done to achieve the functioning webapp [here](docs/Rapport%20TD/RapportParSeanceJohanVERNE.pdf)
